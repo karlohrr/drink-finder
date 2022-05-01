@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
 import { config } from "./config.js";
+import Select from "react-select";
 
 class IngredientList extends React.Component {
   constructor(props) {
@@ -22,7 +23,9 @@ class IngredientList extends React.Component {
           console.log(result);
           this.setState({
             isLoaded: true,
-            ingredients: result.drinks,
+            ingredients: result.drinks.map((n) => {
+              return { value: n.strIngredient1, label: n.strIngredient1 };
+            }),
           });
         },
         (error) => {
@@ -43,11 +46,11 @@ class IngredientList extends React.Component {
       return <div>Loading Ingredients...</div>;
     } else {
       return (
-        <ul>
-          {ingredients.map((ing) => (
-            <li key={ing.strIngredient1}>{ing.strIngredient1}</li>
-          ))}
-        </ul>
+        <Select
+          name="ingredients"
+          options={ingredients}
+          isMulti="true"
+        ></Select>
       );
     }
   }
