@@ -46,7 +46,7 @@ class IngredientList extends React.Component {
         <Select
           name="ingredients"
           options={ingredients}
-          isMulti="true"
+          onChange={this.props.onChange}
         ></Select>
       );
     }
