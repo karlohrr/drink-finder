@@ -5,6 +5,7 @@ import IngredientList from "./components/IngredientList";
 import GetDrinksButton from "./components/GetDrinksButton";
 import { config } from "./config.js";
 import DrinkList from "./components/DrinkList";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 class App extends React.Component {
   constructor(props) {
@@ -24,10 +25,8 @@ class App extends React.Component {
     const ingredient = this.state.selectedIngredient?.value ?? null;
     let message;
     if (!ingredient) {
-      message = "no ingredient selected.";
-
       this.setState({
-        drinks: message,
+        drinks: null,
       });
     } else {
       this.setState({ searchedIngredient: ingredient });
@@ -35,7 +34,6 @@ class App extends React.Component {
       let fullURL = `${config.baseURL}filter.php?i=${ingredient}`;
       fetch(fullURL)
         .then((res) => {
-          console.log(res);
           return res.json();
         })
         .then(
@@ -60,12 +58,18 @@ class App extends React.Component {
   render() {
     const ingredient = this.state.searchedIngredient;
     const drinkHeader = ingredient ? <h2>Drinks using {ingredient}</h2> : null;
+    const noIngredientMsg =
+      this.state.searchedIngredient && !this.state.drinks ? (
+        <div>no ingredient selected</div>
+      ) : null;
+
     return (
       <div>
         <IngredientList onChange={this.ingredientSelect}></IngredientList>
         <GetDrinksButton onClick={this.getDrinks}></GetDrinksButton>
-        {drinkHeader}
-        <DrinkList drinks={this.state.drinks}></DrinkList>
+        {noIngredientMsg}
+
+        <DrinkList header={drinkHeader} drinks={this.state.drinks}></DrinkList>
       </div>
     );
   }

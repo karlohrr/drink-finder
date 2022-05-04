@@ -42,7 +42,7 @@ class IngredientList extends React.Component {
       return <div>Loading Ingredients...</div>;
     } else {
       return (
-        <div>
+        <div className="container">
           <h2>Select an Ingredient</h2>
           <Select
             name="ingredients"

@@ -49,3 +49,12 @@ body {
     margin-left: 20px;
   }
   
+  .drinkImg {
+    max-height: 100%;
+    max-width: 100%;
+    object-fit: contain;
+  }
+
+  .drinkName {
+    white-space: nowrap;
+  }

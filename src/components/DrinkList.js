@@ -9,15 +9,24 @@ class DrinkList extends React.Component {
 
     const drinkDivs = drinks.map((drink) => {
       return (
-        <div>
-          <h2>{drink.name}</h2>
-          <img src={drink.imgThumb}></img>
-          <div>{drink.drinkID}</div>
+        <div
+          key={drink.drinkID}
+          className="col-sm-6 col-md-4 col-lg-3 col-xl-3"
+        >
+          <h3 className="drinkName">{drink.name}</h3>
+          <img className="drinkImg" src={drink.imgThumb}></img>
           <div></div>
         </div>
       );
     });
-    return <div>{drinkDivs}</div>;
+    return (
+      <div className="container">
+        <div className="row">
+          {this.props.header}
+          {drinkDivs}
+        </div>
+      </div>
+    );
   }
 }
 
