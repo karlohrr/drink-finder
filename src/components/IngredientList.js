@@ -36,18 +36,20 @@ class IngredientList extends React.Component {
 
   render() {
     const { error, isLoaded, ingredients } = this.state;
-
     if (error) {
       return <div>Error: {error.message}</div>;
     } else if (!isLoaded) {
       return <div>Loading Ingredients...</div>;
     } else {
       return (
-        <Select
-          name="ingredients"
-          options={ingredients}
-          onChange={this.props.onChange}
-        ></Select>
+        <div>
+          <h2>Select an Ingredient</h2>
+          <Select
+            name="ingredients"
+            options={ingredients}
+            onChange={this.props.onChange}
+          ></Select>
+        </div>
       );
     }
   }
