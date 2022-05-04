@@ -6,6 +6,7 @@ import GetDrinksButton from "./components/GetDrinksButton";
 import { config } from "./config.js";
 import DrinkList from "./components/DrinkList";
 import "bootstrap/dist/css/bootstrap.min.css";
+import DrinkDetails from "./components/DrinkDetails";
 
 class App extends React.Component {
   constructor(props) {
@@ -14,11 +15,36 @@ class App extends React.Component {
       selectedIngredient: null,
       drinks: null,
       searchedIngredient: null,
+      selectedDrink: null,
     };
   }
 
   ingredientSelect = (selectedIngredient) => {
     this.setState({ selectedIngredient });
+  };
+
+  getDrinkDetails = (drinkID) => {
+    if (drinkID !== 0 && !drinkID) {
+      // how'd you get here?
+      return;
+    }
+    let fullURL = `${config.baseURL}lookup.php?i=${drinkID}`;
+    fetch(fullURL)
+      .then((res) => {
+        return res.json();
+      })
+      .then(
+        (result) => {
+          let selectedDrink = result.drinks[0];
+          this.setState({
+            selectedDrink,
+          });
+          console.log(this.state.selectedDrink);
+        },
+        (error) => {
+          console.log("Could not get drink details");
+        }
+      );
   };
 
   getDrinks = () => {
@@ -57,19 +83,29 @@ class App extends React.Component {
 
   render() {
     const ingredient = this.state.searchedIngredient;
+    const drink = this.state.selectedDrink;
     const drinkHeader = ingredient ? <h2>Drinks using {ingredient}</h2> : null;
     const noIngredientMsg =
       this.state.searchedIngredient && !this.state.drinks ? (
         <div>no ingredient selected</div>
       ) : null;
 
+    const drinkDetails = drink ? (
+      <DrinkDetails drink={drink}></DrinkDetails>
+    ) : null;
+
     return (
       <div>
         <IngredientList onChange={this.ingredientSelect}></IngredientList>
         <GetDrinksButton onClick={this.getDrinks}></GetDrinksButton>
+        {drinkDetails}
         {noIngredientMsg}
 
-        <DrinkList header={drinkHeader} drinks={this.state.drinks}></DrinkList>
+        <DrinkList
+          header={drinkHeader}
+          drinks={this.state.drinks}
+          detailsGetter={this.getDrinkDetails}
+        ></DrinkList>
       </div>
     );
   }
