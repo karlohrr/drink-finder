@@ -16,6 +16,7 @@ class App extends React.Component {
       drinks: null,
       searchedIngredient: null,
       selectedDrink: null,
+      showDetails: false,
     };
   }
 
@@ -28,6 +29,7 @@ class App extends React.Component {
       // how'd you get here?
       return;
     }
+
     let fullURL = `${config.baseURL}lookup.php?i=${drinkID}`;
     fetch(fullURL)
       .then((res) => {
@@ -38,6 +40,7 @@ class App extends React.Component {
           let selectedDrink = result.drinks[0];
           this.setState({
             selectedDrink,
+            showDetails: true,
           });
           console.log(this.state.selectedDrink);
         },
@@ -72,6 +75,7 @@ class App extends React.Component {
                   drinkID: n.idDrink,
                 };
               }),
+              showDetails: false,
             });
           },
           (error) => {
@@ -81,31 +85,38 @@ class App extends React.Component {
     }
   };
 
+  toggleView = () => {
+    this.setState({ showDetails: !this.state.showDetails });
+  };
+
   render() {
     const ingredient = this.state.searchedIngredient;
     const drink = this.state.selectedDrink;
     const drinkHeader = ingredient ? <h2>Drinks using {ingredient}</h2> : null;
-    const noIngredientMsg =
-      this.state.searchedIngredient && !this.state.drinks ? (
-        <div>no ingredient selected</div>
-      ) : null;
 
     const drinkDetails = drink ? (
       <DrinkDetails drink={drink}></DrinkDetails>
     ) : null;
 
-    return (
-      <div>
-        <IngredientList onChange={this.ingredientSelect}></IngredientList>
-        <GetDrinksButton onClick={this.getDrinks}></GetDrinksButton>
-        {drinkDetails}
-        {noIngredientMsg}
-
+    const content =
+      this.state.showDetails === true ? (
+        drinkDetails
+      ) : (
         <DrinkList
           header={drinkHeader}
           drinks={this.state.drinks}
           detailsGetter={this.getDrinkDetails}
         ></DrinkList>
+      );
+
+    return (
+      <div>
+        <IngredientList onChange={this.ingredientSelect}></IngredientList>
+        <GetDrinksButton onClick={this.getDrinks}></GetDrinksButton>
+        <button className="btn btn-secondary" onClick={this.toggleView}>
+          {}Toggle view
+        </button>
+        {content}
       </div>
     );
   }
