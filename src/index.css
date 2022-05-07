@@ -20,3 +20,7 @@ body {
   .detailsContent {
     padding-left: 30px;
   }
+
+  .inline {
+    display: inline;
+  }

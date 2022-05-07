@@ -28,7 +28,10 @@ class DrinkDetails extends React.Component {
             <img className="drinkImg" src={drink.strDrinkThumb}></img>
           </div>
           <div className="col-sm-6 col-md-6 col-lg-7 col-xl-8">
-            <h2>{drink.strDrink}</h2>
+            <div>
+              <h2 className="inline">{drink.strDrink}</h2> -{" "}
+              <em>{drink.strAlcoholic}</em>
+            </div>
             <div className="detailsContent">
               <div>
                 <h4>Ingredients</h4>
