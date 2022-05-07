@@ -17,7 +17,7 @@ body {
   .drinkName {
     white-space: nowrap;
   }
-  .detailsContent {
+  .indent {
     padding-left: 30px;
   }
 

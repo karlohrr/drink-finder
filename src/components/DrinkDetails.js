@@ -10,9 +10,15 @@ class DrinkDetails extends React.Component {
       if (!drink[`${namePrefix}${i}`]) break;
       const ingName = drink[`${namePrefix}${i}`];
       const measurement = drink[`${measurePrefix}${i}`]
-        ? `${drink[`${measurePrefix}${i}`]} - `
+        ? `${drink[`${measurePrefix}${i}`]}`
         : "";
-      ingredients.push(<li key={ingName}>{`${measurement}${ingName}`}</li>);
+      ingredients.push(
+        <tr key={ingName}>
+          <td>{`${measurement}`}</td>
+          <td>-</td>
+          <td>{`${ingName}`}</td>
+        </tr>
+      );
     }
     return ingredients;
   }
@@ -32,13 +38,15 @@ class DrinkDetails extends React.Component {
               <h2 className="inline">{drink.strDrink}</h2> -{" "}
               <em>{drink.strAlcoholic}</em>
             </div>
-            <div className="detailsContent">
-              <div>
-                <h4>Ingredients</h4>
-                <ul>{ingredientList}</ul>
+            <div className="indent">
+              <h4>Ingredients</h4>
+              <div className="indent">
+                <table>
+                  <tbody>{ingredientList}</tbody>
+                </table>
               </div>
-              <div>
-                <h4>Instructions</h4>
+              <h4>Instructions</h4>
+              <div className="indent">
                 <p>{drink.strInstructions}</p>
               </div>
             </div>

@@ -42,7 +42,6 @@ class App extends React.Component {
             selectedDrink,
             showDetails: true,
           });
-          console.log(this.state.selectedDrink);
         },
         (error) => {
           console.log("Could not get drink details");
@@ -112,10 +111,12 @@ class App extends React.Component {
     return (
       <div>
         <IngredientList onChange={this.ingredientSelect}></IngredientList>
-        <GetDrinksButton onClick={this.getDrinks}></GetDrinksButton>
-        <button className="btn btn-secondary" onClick={this.toggleView}>
-          {}Toggle view
-        </button>
+        <div className="container">
+          <GetDrinksButton onClick={this.getDrinks}></GetDrinksButton>
+          <button className="btn btn-secondary" onClick={this.toggleView}>
+            {}Toggle view
+          </button>
+        </div>
         {content}
       </div>
     );
