@@ -44,12 +44,10 @@ function App() {
 
   const getDrinks = () => {
     const ingredient = selectedIngredient?.value ?? null;
-    let message;
     if (!ingredient) {
       setDrinks(null);
     } else {
       setSearchedIngredient(ingredient);
-      message = `getting drinks for ingredient: ${ingredient}`;
       let fullURL = `${config.baseURL}filter.php?i=${ingredient}`;
       fetch(fullURL)
         .then((res) => {
