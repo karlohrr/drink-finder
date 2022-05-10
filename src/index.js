@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
 import IngredientList from "./components/IngredientList";
@@ -8,23 +8,18 @@ import DrinkList from "./components/DrinkList";
 import "bootstrap/dist/css/bootstrap.min.css";
 import DrinkDetails from "./components/DrinkDetails";
 
-class App extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      selectedIngredient: null,
-      drinks: null,
-      searchedIngredient: null,
-      selectedDrink: null,
-      showDetails: false,
-    };
-  }
+function App() {
+  const [selectedIngredient, setSelectedIngredient] = useState(null);
+  const [drinks, setDrinks] = useState(null);
+  const [searchedIngredient, setSearchedIngredient] = useState(null);
+  const [selectedDrink, setSelectedDrink] = useState(null);
+  const [showDetails, setShowDetails] = useState(false);
 
-  ingredientSelect = (selectedIngredient) => {
-    this.setState({ selectedIngredient });
+  const ingredientSelect = (ingredient) => {
+    setSelectedIngredient(ingredient);
   };
 
-  getDrinkDetails = (drinkID) => {
+  const getDrinkDetails = (drinkID) => {
     if (drinkID !== 0 && !drinkID) {
       // how'd you get here?
       return;
@@ -38,10 +33,8 @@ class App extends React.Component {
       .then(
         (result) => {
           let selectedDrink = result.drinks[0];
-          this.setState({
-            selectedDrink,
-            showDetails: true,
-          });
+          setSelectedDrink(selectedDrink);
+          setShowDetails(true);
         },
         (error) => {
           console.log("Could not get drink details");
@@ -49,15 +42,13 @@ class App extends React.Component {
       );
   };
 
-  getDrinks = () => {
-    const ingredient = this.state.selectedIngredient?.value ?? null;
+  const getDrinks = () => {
+    const ingredient = selectedIngredient?.value ?? null;
     let message;
     if (!ingredient) {
-      this.setState({
-        drinks: null,
-      });
+      setDrinks(null);
     } else {
-      this.setState({ searchedIngredient: ingredient });
+      setSearchedIngredient(ingredient);
       message = `getting drinks for ingredient: ${ingredient}`;
       let fullURL = `${config.baseURL}filter.php?i=${ingredient}`;
       fetch(fullURL)
@@ -66,16 +57,16 @@ class App extends React.Component {
         })
         .then(
           (result) => {
-            this.setState({
-              drinks: result.drinks.map((n) => {
+            setDrinks(
+              result.drinks.map((n) => {
                 return {
                   name: n.strDrink,
                   imgThumb: n.strDrinkThumb,
                   drinkID: n.idDrink,
                 };
-              }),
-              showDetails: false,
-            });
+              })
+            );
+            setShowDetails(false);
           },
           (error) => {
             console.log("Could not get drinks");
@@ -84,43 +75,41 @@ class App extends React.Component {
     }
   };
 
-  toggleView = () => {
-    this.setState({ showDetails: !this.state.showDetails });
+  const toggleView = () => {
+    setShowDetails(!showDetails);
   };
 
-  render() {
-    const ingredient = this.state.searchedIngredient;
-    const drink = this.state.selectedDrink;
-    const drinkHeader = ingredient ? <h2>Drinks using {ingredient}</h2> : null;
+  const ingredient = searchedIngredient;
+  const drink = selectedDrink;
+  const drinkHeader = ingredient ? <h2>Drinks using {ingredient}</h2> : null;
 
-    const drinkDetails = drink ? (
-      <DrinkDetails drink={drink}></DrinkDetails>
-    ) : null;
+  const drinkDetails = drink ? (
+    <DrinkDetails drink={drink}></DrinkDetails>
+  ) : null;
 
-    const content =
-      this.state.showDetails === true ? (
-        drinkDetails
-      ) : (
-        <DrinkList
-          header={drinkHeader}
-          drinks={this.state.drinks}
-          detailsGetter={this.getDrinkDetails}
-        ></DrinkList>
-      );
-
-    return (
-      <div>
-        <IngredientList onChange={this.ingredientSelect}></IngredientList>
-        <div className="container">
-          <GetDrinksButton onClick={this.getDrinks}></GetDrinksButton>
-          <button className="btn btn-secondary" onClick={this.toggleView}>
-            {}Toggle view
-          </button>
-        </div>
-        {content}
-      </div>
+  const content =
+    showDetails === true ? (
+      drinkDetails
+    ) : (
+      <DrinkList
+        header={drinkHeader}
+        drinks={drinks}
+        detailsGetter={getDrinkDetails}
+      ></DrinkList>
     );
-  }
+
+  return (
+    <div>
+      <IngredientList onChange={ingredientSelect}></IngredientList>
+      <div className="container">
+        <GetDrinksButton onClick={getDrinks}></GetDrinksButton>
+        <button className="btn btn-secondary" onClick={toggleView}>
+          Toggle view
+        </button>
+      </div>
+      {content}
+    </div>
+  );
 }
 
 // ========================================
